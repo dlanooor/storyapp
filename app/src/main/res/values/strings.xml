@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">StoryApp</string>
+    <string name="login">LOGIN</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="name">Name</string>
+    <string name="register">REGISTER</string>
+    <string name="dont_hv_acc">Don\'t have an Account ? Register</string>
+    <string name="hv_acc">Have an Account ? Login</string>
 </resources>
