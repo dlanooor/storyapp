@@ -1,4 +1,4 @@
-package com.example.storyapp.ui.authentication.customview
+package com.example.storyapp.ui.customview
 
 import android.content.Context
 import android.graphics.Canvas
@@ -10,7 +10,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import com.example.storyapp.R
 
-class RegisterButton : AppCompatButton {
+class LoginButton : AppCompatButton {
     private lateinit var enabledBackground: Drawable
     private lateinit var disabledBackground: Drawable
     private var txtColor: Int = 0
@@ -35,7 +35,7 @@ class RegisterButton : AppCompatButton {
         textSize = 18f
         typeface = Typeface.DEFAULT_BOLD
         gravity = Gravity.CENTER
-        text = if (isEnabled) "Register" else "Fill In"
+        text = if (isEnabled) "Login" else "Fill In"
     }
 
     private fun init() {

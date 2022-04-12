@@ -13,4 +13,25 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="TextContent">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="TextContent.White">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextContent.White.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextContent.Black">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="TextContent.Black.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

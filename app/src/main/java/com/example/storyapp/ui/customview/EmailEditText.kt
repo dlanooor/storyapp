@@ -1,7 +1,8 @@
-package com.example.storyapp.ui.authentication.customview
+package com.example.storyapp.ui.customview
 
 import android.content.Context
 import android.graphics.Canvas
+import android.text.InputType
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -24,6 +25,8 @@ class EmailEditText : AppCompatEditText, View.OnTouchListener {
         super.onDraw(canvas)
         hint = "email@email.com"
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+        inputType = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+        maxLines = 1
     }
 
     private fun init() {

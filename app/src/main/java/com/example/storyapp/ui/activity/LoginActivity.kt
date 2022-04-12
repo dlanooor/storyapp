@@ -1,4 +1,4 @@
-package com.example.storyapp.ui.authentication.activity
+package com.example.storyapp.ui.activity
 
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -8,11 +8,14 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
+import com.example.storyapp.data.local.UserModel
+import com.example.storyapp.data.local.UserSession
 import com.example.storyapp.data.remote.api.ApiConfig
 import com.example.storyapp.data.remote.pojo.Login
-import com.example.storyapp.ui.authentication.customview.EmailEditText
-import com.example.storyapp.ui.authentication.customview.LoginButton
-import com.example.storyapp.ui.authentication.customview.PasswordEditText
+import com.example.storyapp.data.remote.pojo.LoginResult
+import com.example.storyapp.ui.customview.EmailEditText
+import com.example.storyapp.ui.customview.LoginButton
+import com.example.storyapp.ui.customview.PasswordEditText
 import com.example.storyapp.databinding.ActivityLoginBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -39,7 +42,6 @@ class LoginActivity : AppCompatActivity() {
         loginButton = binding.loginButton
         emailEditText = binding.etEmail
         passwordEditText = binding.etPassword
-
 
         if (!intent.getStringExtra("email").isNullOrEmpty()) {
             emailEditText.setText(intent.getStringExtra("email"))
@@ -104,22 +106,44 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login() {
-        val client = ApiConfig.getApiService().login(emailEditText.text.toString(), passwordEditText.text.toString())
+        val client = ApiConfig.getApiService()
+            .login(emailEditText.text.toString(), passwordEditText.text.toString())
         client.enqueue(object : Callback<Login> {
             override fun onResponse(call: Call<Login>, response: Response<Login>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
-                    println(responseBody)
-                }
-                else {
+                    if (responseBody.error == true) {
+                        Toast.makeText(this@LoginActivity, responseBody.message, Toast.LENGTH_LONG)
+                            .show()
+                    } else {
+                        saveSession(responseBody.loginResult as LoginResult)
+                        Toast.makeText(this@LoginActivity, "Login Success", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
+                    Toast.makeText(this@LoginActivity, response.message(), Toast.LENGTH_LONG)
+                        .show()
                 }
             }
 
             override fun onFailure(call: Call<Login>, t: Throwable) {
                 Log.e(TAG, "onFailure: ${t.message}")
+                Toast.makeText(this@LoginActivity, t.message, Toast.LENGTH_LONG).show()
             }
 
         })
+    }
+
+    private fun saveSession(loginResult: LoginResult) {
+        var userModel = UserModel(loginResult.userId, loginResult.name, loginResult.token)
+
+        val i = Intent(this, MainActivity::class.java)
+        i.putExtra(USER_SESSION, userModel)
+        startActivity(i)
+    }
+
+    companion object {
+        const val USER_SESSION = "user_session"
     }
 }

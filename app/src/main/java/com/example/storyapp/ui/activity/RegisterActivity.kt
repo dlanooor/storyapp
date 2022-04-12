@@ -1,4 +1,4 @@
-package com.example.storyapp.ui.authentication.activity
+package com.example.storyapp.ui.activity
 
 import android.content.ContentValues
 import android.content.Intent
@@ -9,10 +9,12 @@ import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
 import com.example.storyapp.data.remote.api.ApiConfig
-import com.example.storyapp.data.remote.pojo.Login
 import com.example.storyapp.data.remote.pojo.Register
-import com.example.storyapp.ui.authentication.customview.*
 import com.example.storyapp.databinding.ActivityRegisterBinding
+import com.example.storyapp.ui.customview.EmailEditText
+import com.example.storyapp.ui.customview.NameEditText
+import com.example.storyapp.ui.customview.PasswordEditText
+import com.example.storyapp.ui.customview.RegisterButton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -115,20 +117,36 @@ class RegisterActivity : AppCompatActivity() {
     private fun register() {
         var isSuccess: Boolean = false
 
-        val client = ApiConfig.getApiService().register(nameEditText.text.toString(), emailEditText.text.toString(), passwordEditText.text.toString())
+        val client = ApiConfig.getApiService().register(
+            nameEditText.text.toString(),
+            emailEditText.text.toString(),
+            passwordEditText.text.toString()
+        )
         client.enqueue(object : Callback<Register> {
             override fun onResponse(call: Call<Register>, response: Response<Register>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
-                    goLogin()
-                }
-                else {
+                    if (responseBody.error == true) {
+                        Toast.makeText(
+                            this@RegisterActivity,
+                            responseBody.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        goLogin()
+                        Toast.makeText(this@RegisterActivity, responseBody.message, Toast.LENGTH_LONG)
+                            .show()
+                    }
+                } else {
                     Log.e(ContentValues.TAG, "onFailure: ${response.message()}")
+                    Toast.makeText(this@RegisterActivity, response.message(), Toast.LENGTH_LONG)
+                        .show()
                 }
             }
 
             override fun onFailure(call: Call<Register>, t: Throwable) {
                 Log.e(ContentValues.TAG, "onFailure: ${t.message}")
+                Toast.makeText(this@RegisterActivity, t.message, Toast.LENGTH_LONG).show()
             }
 
         })

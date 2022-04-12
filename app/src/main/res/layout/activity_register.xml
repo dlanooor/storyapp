@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.authentication.activity.RegisterActivity">
+    tools:context=".ui.activity.RegisterActivity">
 
     <ImageView
         android:id="@+id/iv_applogo"
@@ -42,7 +42,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_login" />
 
-    <com.example.storyapp.ui.authentication.customview.NameEditText
+    <com.example.storyapp.ui.customview.NameEditText
         android:id="@+id/et_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_name" />
 
-    <com.example.storyapp.ui.authentication.customview.EmailEditText
+    <com.example.storyapp.ui.customview.EmailEditText
         android:id="@+id/et_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_email" />
 
-    <com.example.storyapp.ui.authentication.customview.PasswordEditText
+    <com.example.storyapp.ui.customview.PasswordEditText
         android:id="@+id/et_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_password" />
 
-    <com.example.storyapp.ui.authentication.customview.RegisterButton
+    <com.example.storyapp.ui.customview.RegisterButton
         android:id="@+id/register_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

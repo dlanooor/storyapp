@@ -12,10 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StoryApp">
         <activity
-            android:name="com.example.storyapp.ui.authentication.activity.RegisterActivity"
+            android:name=".ui.activity.DetailActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.storyapp.ui.authentication.activity.LoginActivity"
+            android:name=".ui.activity.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,8 +27,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.authentication.activity.MainActivity"
-            android:exported="true"></activity>
+            android:name=".ui.activity.MainActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
