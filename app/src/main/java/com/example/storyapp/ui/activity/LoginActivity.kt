@@ -1,6 +1,7 @@
 package com.example.storyapp.ui.activity
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,8 +9,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
-import com.example.storyapp.data.local.UserModel
-import com.example.storyapp.data.local.UserSession
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.ViewModelProvider
 import com.example.storyapp.data.remote.api.ApiConfig
 import com.example.storyapp.data.remote.pojo.Login
 import com.example.storyapp.data.remote.pojo.LoginResult
@@ -17,6 +20,8 @@ import com.example.storyapp.ui.customview.EmailEditText
 import com.example.storyapp.ui.customview.LoginButton
 import com.example.storyapp.ui.customview.PasswordEditText
 import com.example.storyapp.databinding.ActivityLoginBinding
+import com.example.storyapp.ui.viewmodel.LoginViewModel
+import com.example.storyapp.ui.viewmodel.ViewModelFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,6 +31,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var loginButton: LoginButton
     private lateinit var emailEditText: EmailEditText
     private lateinit var passwordEditText: PasswordEditText
+
+    private lateinit var loginViewModel: LoginViewModel
 
     private var correctEmail: Boolean = false
     private var correctPassword: Boolean = false
@@ -52,6 +59,11 @@ class LoginActivity : AppCompatActivity() {
             correctPassword = true
         }
 
+        loginViewModel = ViewModelProvider (
+                this,
+        ViewModelFactory()
+        )[LoginViewModel::class.java]
+
         setLoginButtonEnable()
 
         emailEditText.addTextChangedListener(object : TextWatcher {
@@ -59,11 +71,11 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!s.isNullOrEmpty() && !emailRegex.matches(s.toString())) {
-                    emailEditText.setError("Invalid Email Address")
-                    correctEmail = false
+                correctEmail = if (!s.isNullOrEmpty() && !emailRegex.matches(s.toString())) {
+                    emailEditText.error = "Invalid Email Address"
+                    false
                 } else {
-                    correctEmail = true
+                    true
                 }
                 setLoginButtonEnable()
             }
@@ -78,11 +90,11 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!s.isNullOrEmpty() && s.length < 6) {
-                    passwordEditText.setError("Password Minimum Length is 6")
-                    correctPassword = false
+                correctPassword = if (!s.isNullOrEmpty() && s.length < 6) {
+                    passwordEditText.error = "Password Minimum Length is 6"
+                    false
                 } else {
-                    correctPassword = true
+                    true
                 }
                 setLoginButtonEnable()
             }
@@ -136,8 +148,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun saveSession(loginResult: LoginResult) {
-        var userModel = UserModel(loginResult.userId, loginResult.name, loginResult.token)
-
+        val userModel = LoginResult(loginResult.userId, loginResult.name, loginResult.token)
         val i = Intent(this, MainActivity::class.java)
         i.putExtra(USER_SESSION, userModel)
         startActivity(i)

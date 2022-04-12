@@ -9,4 +9,6 @@
     <string name="name">Name</string>
     <string name="description">Description</string>
     <string name="storiesimage">StoriesImage</string>
+    <string name="logout">logout</string>
+    <string name="add">add</string>
 </resources>

@@ -33,7 +33,7 @@
         <TextView
             android:id="@+id/tv_item_name"
             style="@style/TextContent.White"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="6dp"
             android:layout_marginBottom="2dp"
             android:layout_toEndOf="@+id/im_item_photo"
             card_view:layout_constraintBottom_toBottomOf="parent"
