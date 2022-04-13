@@ -1,5 +1,7 @@
 package com.example.storyapp.ui.activity
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.ContentValues
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -40,6 +42,7 @@ class RegisterActivity : AppCompatActivity() {
 
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        playAnimation()
 
         registerButton = binding.registerButton
         emailEditText = binding.etEmail
@@ -163,6 +166,54 @@ class RegisterActivity : AppCompatActivity() {
         })
     }
 
+    private fun playAnimation() {
+        val appLogo = ObjectAnimator.ofFloat(binding.ivApplogo, View.ALPHA, ALPHA).setDuration(
+            DURATION
+        )
+        val tvLogin = ObjectAnimator.ofFloat(binding.tvLogin, View.ALPHA, ALPHA).setDuration(
+            DURATION
+        )
+        val tvName = ObjectAnimator.ofFloat(binding.tvName, View.ALPHA, ALPHA).setDuration(
+            DURATION
+        )
+        val etName = ObjectAnimator.ofFloat(binding.etName, View.ALPHA, ALPHA).setDuration(
+            DURATION
+        )
+        val tvEmail = ObjectAnimator.ofFloat(binding.tvEmail, View.ALPHA, ALPHA).setDuration(
+            DURATION
+        )
+        val etEmail = ObjectAnimator.ofFloat(binding.etEmail, View.ALPHA, ALPHA).setDuration(
+            DURATION
+        )
+        val tvPassword = ObjectAnimator.ofFloat(binding.tvPassword, View.ALPHA, ALPHA).setDuration(
+            DURATION
+        )
+        val etPassword = ObjectAnimator.ofFloat(binding.etPassword, View.ALPHA, ALPHA).setDuration(
+            DURATION
+        )
+        val registerButton =
+            ObjectAnimator.ofFloat(binding.registerButton, View.ALPHA, ALPHA).setDuration(DURATION)
+        val tvAccount = ObjectAnimator.ofFloat(binding.tvAccount, View.ALPHA, ALPHA).setDuration(
+            DURATION
+        )
+
+        AnimatorSet().apply {
+            playSequentially(
+                appLogo,
+                tvLogin,
+                tvName,
+                etName,
+                tvEmail,
+                etEmail,
+                tvPassword,
+                etPassword,
+                registerButton,
+                tvAccount
+            )
+            start()
+        }
+    }
+
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.apply {
             visibility = if (isLoading) {
@@ -181,6 +232,11 @@ class RegisterActivity : AppCompatActivity() {
         startActivity(i)
         showLoading(false)
         finish()
+    }
+
+    companion object {
+        private const val DURATION = 200L
+        private const val ALPHA = 1f
     }
 
 }

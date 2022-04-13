@@ -1,5 +1,7 @@
 package com.example.storyapp.ui.activity
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
@@ -50,6 +52,7 @@ class LoginActivity : AppCompatActivity() {
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        playAnimation()
 
         loginButton = binding.loginButton
         emailEditText = binding.etEmail
@@ -135,6 +138,39 @@ class LoginActivity : AppCompatActivity() {
         loginButton.isEnabled = correctEmail && correctPassword
     }
 
+    private fun playAnimation() {
+        val appLogo =
+            ObjectAnimator.ofFloat(binding.ivApplogo, View.ALPHA, ALPHA).setDuration(DURATION)
+        val tvLogin =
+            ObjectAnimator.ofFloat(binding.tvLogin, View.ALPHA, ALPHA).setDuration(DURATION)
+        val tvEmail =
+            ObjectAnimator.ofFloat(binding.tvEmail, View.ALPHA, ALPHA).setDuration(DURATION)
+        val etEmail =
+            ObjectAnimator.ofFloat(binding.etEmail, View.ALPHA, ALPHA).setDuration(DURATION)
+        val tvPassword =
+            ObjectAnimator.ofFloat(binding.tvPassword, View.ALPHA, ALPHA).setDuration(DURATION)
+        val etPassword =
+            ObjectAnimator.ofFloat(binding.etPassword, View.ALPHA, ALPHA).setDuration(DURATION)
+        val loginButton =
+            ObjectAnimator.ofFloat(binding.loginButton, View.ALPHA, ALPHA).setDuration(DURATION)
+        val tvAccount =
+            ObjectAnimator.ofFloat(binding.tvAccount, View.ALPHA, ALPHA).setDuration(DURATION)
+
+        AnimatorSet().apply {
+            playSequentially(
+                appLogo,
+                tvLogin,
+                tvEmail,
+                etEmail,
+                tvPassword,
+                etPassword,
+                loginButton,
+                tvAccount
+            )
+            start()
+        }
+    }
+
     private fun login() {
         showLoading(true)
         val client = ApiConfig.getApiService()
@@ -190,5 +226,10 @@ class LoginActivity : AppCompatActivity() {
         startActivity(i)
         showLoading(false)
         finish()
+    }
+
+    companion object {
+        private const val DURATION = 200L
+        private const val ALPHA = 1f
     }
 }
