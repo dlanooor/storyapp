@@ -13,6 +13,9 @@ class ViewModelFactory(private val pref: UserSession) : ViewModelProvider.NewIns
         else if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             return LoginViewModel(pref) as T
         }
+        else if (modelClass.isAssignableFrom(AddStoryViewModel::class.java)) {
+            return AddStoryViewModel(pref) as T
+        }
         throw IllegalArgumentException("Unknown Viewmodel Class: " + modelClass.name)
     }
 

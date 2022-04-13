@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val pref = UserSession.getInstance(dataStore)
-        var userToken = String()
 
         mainViewModel = ViewModelProvider(this, ViewModelFactory(pref)).get(
             MainViewModel::class.java

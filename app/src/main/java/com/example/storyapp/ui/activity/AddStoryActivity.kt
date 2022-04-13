@@ -2,22 +2,69 @@ package com.example.storyapp.ui.activity
 
 import android.Manifest
 import android.content.Intent
+import android.content.Intent.ACTION_GET_CONTENT
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.storyapp.R
+import androidx.lifecycle.ViewModelProvider
+import com.example.storyapp.data.local.UserSession
 import com.example.storyapp.databinding.ActivityAddStoryBinding
 import com.example.storyapp.ui.activity.camera.CameraActivity
+import com.example.storyapp.data.remote.api.ApiConfig
+import com.example.storyapp.data.remote.pojo.AddNewStory
+import com.example.storyapp.ui.activity.camera.reduceFileImage
 import com.example.storyapp.ui.activity.camera.rotateBitmap
+import com.example.storyapp.ui.activity.camera.uriToFile
+import com.example.storyapp.ui.viewmodel.AddStoryViewModel
+import com.example.storyapp.ui.viewmodel.ViewModelFactory
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
 
 class AddStoryActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityAddStoryBinding
+    private lateinit var addStoryViewModel: AddStoryViewModel
+    private var getFile: File? = null
+    private val launcherIntentCameraX = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == CAMERA_X_RESULT) {
+            val myFile = it.data?.getSerializableExtra("picture") as File
+            getFile = myFile
+
+            val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
+            val result = rotateBitmap(
+                BitmapFactory.decodeFile(myFile.path),
+                isBackCamera
+            )
+
+            binding.previewImageView.setImageBitmap(result)
+        }
+    }
+
+    private val launcherIntentGallery = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val selectedImg: Uri = result.data?.data as Uri
+            val myFile = uriToFile(selectedImg, this@AddStoryActivity)
+            getFile = myFile
+            binding.previewImageView.setImageURI(selectedImg)
+        }
+    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -46,6 +93,11 @@ class AddStoryActivity : AppCompatActivity() {
         binding = ActivityAddStoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val pref = UserSession.getInstance(dataStore)
+        addStoryViewModel = ViewModelProvider(this, ViewModelFactory(pref)).get(
+            AddStoryViewModel::class.java
+        )
+
         if (!allPermissionsGranted()) {
             ActivityCompat.requestPermissions(
                 this,
@@ -64,26 +116,58 @@ class AddStoryActivity : AppCompatActivity() {
     }
 
     private fun startGallery() {
-        Toast.makeText(this, "Fitur ini belum tersedia", Toast.LENGTH_SHORT).show()
+        val intent = Intent()
+        intent.action = ACTION_GET_CONTENT
+        intent.type = "image/*"
+        val chooser = Intent.createChooser(intent, "Choose a Picture")
+        launcherIntentGallery.launch(chooser)
     }
 
     private fun uploadImage() {
-        Toast.makeText(this, "Fitur ini belum tersedia", Toast.LENGTH_SHORT).show()
-    }
+        if (getFile != null) {
+            val file = reduceFileImage(getFile as File)
 
-    private val launcherIntentCameraX = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) {
-        if (it.resultCode == CAMERA_X_RESULT) {
-            val myFile = it.data?.getSerializableExtra("picture") as File
-            val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
-
-            val result = rotateBitmap(
-                BitmapFactory.decodeFile(myFile.path),
-                isBackCamera
+            //descipritonnya masi error
+            val description = binding.edDescription.toString().toRequestBody("text/plain".toMediaType())
+            val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+            val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
+                "photo",
+                file.name,
+                requestImageFile
             )
 
-            binding.previewImageView.setImageBitmap(result)
+            addStoryViewModel.getToken().observe(
+                this,
+                { token: String ->
+                    println(token)
+                    val service = ApiConfig.getApiService()
+                        .uploadStories("Bearer " + token, imageMultipart, description)
+
+                    service.enqueue(object : Callback<AddNewStory> {
+                        override fun onResponse(
+                            call: Call<AddNewStory>,
+                            response: Response<AddNewStory>
+                        ) {
+                            if (response.isSuccessful) {
+                                val responseBody = response.body()
+                                if (responseBody != null && !responseBody.error!!) {
+                                    Toast.makeText(this@AddStoryActivity, responseBody.message, Toast.LENGTH_SHORT).show()
+                                }
+                            } else {
+                                Toast.makeText(this@AddStoryActivity, response.message(), Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        override fun onFailure(call: Call<AddNewStory>, t: Throwable) {
+                            Toast.makeText(this@AddStoryActivity, "Gagal instance Retrofit", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+                })
+        } else {
+            Toast.makeText(
+                this@AddStoryActivity,
+                "Silakan masukkan berkas gambar terlebih dahulu.",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
