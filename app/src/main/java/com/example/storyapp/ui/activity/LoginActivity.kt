@@ -65,14 +65,15 @@ class LoginActivity : AppCompatActivity() {
             correctPassword = true
         }
 
-        loginViewModel = ViewModelProvider (
-                this,
-        ViewModelFactory(pref)
+        loginViewModel = ViewModelProvider(
+            this,
+            ViewModelFactory(pref)
         )[LoginViewModel::class.java]
 
         setLoginButtonEnable()
 
-        loginViewModel.getToken().observe(this
+        loginViewModel.getToken().observe(
+            this
         ) { token: String ->
             if (token.isNotEmpty()) {
                 val i = Intent(this, MainActivity::class.java)
@@ -87,12 +88,10 @@ class LoginActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (!s.isNullOrEmpty() && emailRegex.matches(s.toString())) {
                     correctEmail = true
-                }
-                else if (!s.isNullOrEmpty() && !emailRegex.matches(s.toString())) {
+                } else if (!s.isNullOrEmpty() && !emailRegex.matches(s.toString())) {
                     emailEditText.error = "Invalid Email Address"
                     correctEmail = false
-                }
-                else {
+                } else {
                     correctEmail = false
                 }
                 setLoginButtonEnable()
@@ -182,7 +181,7 @@ class LoginActivity : AppCompatActivity() {
     private fun saveSession(loginResult: LoginResult) {
         loginViewModel.saveToken(loginResult.token as String)
         val i = Intent(this, MainActivity::class.java)
-        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(i)
         showLoading(false)
         finish()

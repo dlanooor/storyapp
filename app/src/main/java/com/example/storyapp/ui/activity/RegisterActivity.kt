@@ -176,7 +176,7 @@ class RegisterActivity : AppCompatActivity() {
         val i = Intent(this, LoginActivity::class.java)
         i.putExtra("email", emailEditText.text.toString())
         i.putExtra("password", passwordEditText.text.toString())
-        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(i)
         showLoading(false)
         finish()

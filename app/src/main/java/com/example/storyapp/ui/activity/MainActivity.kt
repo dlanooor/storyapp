@@ -29,14 +29,12 @@ class MainActivity : AppCompatActivity() {
 
         val pref = UserSession.getInstance(dataStore)
 
-        mainViewModel = ViewModelProvider(this, ViewModelFactory(pref)).get(
-            MainViewModel::class.java
-        )
+        mainViewModel = ViewModelProvider(this, ViewModelFactory(pref))[MainViewModel::class.java]
 
-        mainViewModel.getToken().observe(this,
-            { token: String ->
-                mainViewModel.getAllStories(token)
-            })
+        mainViewModel.getToken().observe(this
+        ) { token: String ->
+            mainViewModel.getAllStories(token)
+        }
 
         mainViewModel.listStories.observe(this) {listStories ->
             showRecyclerList(listStories)
@@ -69,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             R.id.logout -> {
                 mainViewModel.saveToken("")
                 val i = Intent(this, LoginActivity::class.java)
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivity(i)
                 finish()
                 return true
@@ -113,7 +111,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val USER_SESSION = "user_session"
         const val STORIES = "stories"
     }
 

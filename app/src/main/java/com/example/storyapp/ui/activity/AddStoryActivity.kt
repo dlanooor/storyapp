@@ -21,7 +21,6 @@ import com.example.storyapp.databinding.ActivityAddStoryBinding
 import com.example.storyapp.ui.activity.camera.CameraActivity
 import com.example.storyapp.data.remote.api.ApiConfig
 import com.example.storyapp.data.remote.pojo.AddNewStory
-import com.example.storyapp.data.remote.pojo.LoginResult
 import com.example.storyapp.ui.activity.camera.reduceFileImage
 import com.example.storyapp.ui.activity.camera.rotateBitmap
 import com.example.storyapp.ui.activity.camera.uriToFile
@@ -98,9 +97,7 @@ class AddStoryActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val pref = UserSession.getInstance(dataStore)
-        addStoryViewModel = ViewModelProvider(this, ViewModelFactory(pref)).get(
-            AddStoryViewModel::class.java
-        )
+        addStoryViewModel = ViewModelProvider(this, ViewModelFactory(pref))[AddStoryViewModel::class.java]
 
         if (!allPermissionsGranted()) {
             ActivityCompat.requestPermissions(
@@ -117,8 +114,7 @@ class AddStoryActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (!s.isNullOrBlank()) {
                     binding.uploadButton.isEnabled = true
-                }
-                else {
+                } else {
                     binding.uploadButton.isEnabled = false
                     binding.edDescription.error = "Please Fill In"
                 }
@@ -159,48 +155,48 @@ class AddStoryActivity : AppCompatActivity() {
             )
 
             addStoryViewModel.getToken().observe(
-                this,
-                { token: String ->
-                    println(token)
-                    val service = ApiConfig.getApiService()
-                        .uploadStories("Bearer " + token, imageMultipart, description)
-                    showLoading(true)
-                    service.enqueue(object : Callback<AddNewStory> {
-                        override fun onResponse(
-                            call: Call<AddNewStory>,
-                            response: Response<AddNewStory>
-                        ) {
-                            if (response.isSuccessful) {
-                                showLoading(false)
-                                val responseBody = response.body()
-                                if (responseBody != null && !responseBody.error!!) {
-                                    Toast.makeText(
-                                        this@AddStoryActivity,
-                                        responseBody.message,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    intentMain()
-                                }
-                            } else {
-                                showLoading(false)
+                this
+            ) { token: String ->
+                println(token)
+                val service = ApiConfig.getApiService()
+                    .uploadStories("Bearer $token", imageMultipart, description)
+                showLoading(true)
+                service.enqueue(object : Callback<AddNewStory> {
+                    override fun onResponse(
+                        call: Call<AddNewStory>,
+                        response: Response<AddNewStory>
+                    ) {
+                        if (response.isSuccessful) {
+                            showLoading(false)
+                            val responseBody = response.body()
+                            if (responseBody != null && !responseBody.error!!) {
                                 Toast.makeText(
                                     this@AddStoryActivity,
-                                    response.message(),
+                                    responseBody.message,
                                     Toast.LENGTH_SHORT
                                 ).show()
+                                intentMain()
                             }
-                        }
-
-                        override fun onFailure(call: Call<AddNewStory>, t: Throwable) {
+                        } else {
                             showLoading(false)
                             Toast.makeText(
                                 this@AddStoryActivity,
-                                "Gagal instance Retrofit",
+                                response.message(),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-                    })
+                    }
+
+                    override fun onFailure(call: Call<AddNewStory>, t: Throwable) {
+                        showLoading(false)
+                        Toast.makeText(
+                            this@AddStoryActivity,
+                            "Gagal instance Retrofit",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 })
+            }
         } else {
             Toast.makeText(
                 this@AddStoryActivity,
@@ -209,7 +205,6 @@ class AddStoryActivity : AppCompatActivity() {
             ).show()
         }
     }
-
 
 
     private fun showLoading(isLoading: Boolean) {
@@ -228,6 +223,7 @@ class AddStoryActivity : AppCompatActivity() {
         showLoading(false)
         finish()
     }
+
     companion object {
         const val CAMERA_X_RESULT = 200
 

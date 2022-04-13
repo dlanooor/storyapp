@@ -1,9 +1,8 @@
 package com.example.storyapp.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.example.storyapp.R
 import com.example.storyapp.data.remote.pojo.ListStoryItem
 import com.example.storyapp.databinding.ActivityDetailBinding
 
@@ -18,8 +17,8 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         detailStories = intent.getParcelableExtra<ListStoryItem>(STORIES) as ListStoryItem
-        binding.tvItemName.setText(detailStories.name)
-        binding.tvItemDescription.setText(detailStories.description)
+        binding.tvItemName.text = detailStories.name
+        binding.tvItemDescription.text = detailStories.description
 
         Glide.with(applicationContext)
             .load(detailStories.photoUrl)
@@ -27,7 +26,6 @@ class DetailActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val USER_SESSION = "user_session"
         const val STORIES = "stories"
     }
 }

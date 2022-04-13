@@ -30,7 +30,7 @@ class MainViewModel(private val pref: UserSession) : ViewModel() {
 
     fun getAllStories(token: String) {
         _isLoading.value = true
-        val client = ApiConfig.getApiService().getAllStories("Bearer " + token)
+        val client = ApiConfig.getApiService().getAllStories("Bearer $token")
         client.enqueue(object : Callback<GetAllStories> {
             override fun onResponse(call: Call<GetAllStories>, response: Response<GetAllStories>) {
                 _isLoading.value = false

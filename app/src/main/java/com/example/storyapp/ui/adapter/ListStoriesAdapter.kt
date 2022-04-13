@@ -26,7 +26,8 @@ class ListStoriesAdapter(private val listStories: ArrayList<ListStoryItem>) :
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
         holder.tvUsername.text = listStories[position].name
-        Glide.with(holder.itemView.context).load(listStories[position].photoUrl).into(holder.imgPhoto)
+        Glide.with(holder.itemView.context).load(listStories[position].photoUrl)
+            .into(holder.imgPhoto)
         holder.itemView.setOnClickListener { onItemClickCallback.onItemClicked(listStories[holder.adapterPosition]) }
     }
 
