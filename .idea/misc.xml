@@ -12,8 +12,9 @@
         <entry key="..\:/Android App/StoryApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.267" />
         <entry key="..\:/Android App/StoryApp/app/src/main/res/drawable/ic_place_holder.xml" value="0.278" />
         <entry key="..\:/Android App/StoryApp/app/src/main/res/drawable/ic_switch_camera.xml" value="0.278" />
+        <entry key="..\:/Android App/StoryApp/app/src/main/res/drawable/stroke.xml" value="0.165" />
         <entry key="..\:/Android App/StoryApp/app/src/main/res/layout-w936dp/item_row_stories.xml" value="0.16" />
-        <entry key="..\:/Android App/StoryApp/app/src/main/res/layout/activity_add_story.xml" value="0.25" />
+        <entry key="..\:/Android App/StoryApp/app/src/main/res/layout/activity_add_story.xml" value="0.22" />
         <entry key="..\:/Android App/StoryApp/app/src/main/res/layout/activity_camera.xml" value="0.2734375" />
         <entry key="..\:/Android App/StoryApp/app/src/main/res/layout/activity_detail.xml" value="0.33" />
         <entry key="..\:/Android App/StoryApp/app/src/main/res/layout/activity_login.xml" value="0.33" />

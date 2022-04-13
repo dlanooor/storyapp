@@ -52,11 +52,9 @@ class RegisterActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s!!.length >= 2) {
                     correctName = true
-                }
-                else if (s.isNullOrBlank()) {
+                } else if (s.isNullOrBlank()) {
                     correctName = false
-                }
-                else if (!s.isNullOrBlank() && s.length < 2) {
+                } else if (!s.isNullOrBlank() && s.length < 2) {
                     correctName = false
                     nameEditText.error = "Name Minimum Length is 2"
                 }
@@ -75,12 +73,10 @@ class RegisterActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (!s.isNullOrEmpty() && emailRegex.matches(s.toString())) {
                     correctEmail = true
-                }
-                else if (!s.isNullOrEmpty() && !emailRegex.matches(s.toString())) {
+                } else if (!s.isNullOrEmpty() && !emailRegex.matches(s.toString())) {
                     emailEditText.error = "Invalid Email Address"
                     correctEmail = false
-                }
-                else {
+                } else {
                     correctEmail = false
                 }
                 setLoginButtonEnable()
