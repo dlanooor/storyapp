@@ -1,22 +1,32 @@
 package com.example.storyapp.ui.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.example.storyapp.data.local.UserSession
 import com.example.storyapp.data.remote.api.ApiConfig
 import com.example.storyapp.data.remote.pojo.GetAllStories
 import com.example.storyapp.data.remote.pojo.ListStoryItem
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainViewModel() : ViewModel() {
+class MainViewModel(private val pref: UserSession) : ViewModel() {
     private val _listStories = MutableLiveData<List<ListStoryItem>>()
     val listStories: LiveData<List<ListStoryItem>> = _listStories
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
+
+    fun getToken(): LiveData<String> {
+        return pref.getToken().asLiveData()
+    }
+
+    fun saveToken(token: String) {
+        viewModelScope.launch {
+            pref.saveToken(token)
+        }
+    }
 
     fun getAllStories(token: String) {
         _isLoading.value = true

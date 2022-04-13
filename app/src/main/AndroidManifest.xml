@@ -3,6 +3,8 @@
     package="com.example.storyapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -11,6 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.StoryApp">
+        <activity
+            android:name=".ui.activity.camera.CameraActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.activity.AddStoryActivity"
             android:exported="false" />

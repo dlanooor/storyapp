@@ -2,15 +2,16 @@ package com.example.storyapp.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.storyapp.data.local.UserSession
 
-class ViewModelFactory() : ViewModelProvider.NewInstanceFactory() {
+class ViewModelFactory(private val pref: UserSession) : ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel() as T
+            return MainViewModel(pref) as T
         }
         else if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-            return LoginViewModel() as T
+            return LoginViewModel(pref) as T
         }
         throw IllegalArgumentException("Unknown Viewmodel Class: " + modelClass.name)
     }

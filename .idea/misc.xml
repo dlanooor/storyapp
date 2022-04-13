@@ -7,8 +7,14 @@
         <entry key="..\:/Android App/StoryApp/app/src/main/res/drawable/bg_button.xml" value="0.267" />
         <entry key="..\:/Android App/StoryApp/app/src/main/res/drawable/bg_button_disable.xml" value="0.267" />
         <entry key="..\:/Android App/StoryApp/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.1" />
+        <entry key="..\:/Android App/StoryApp/app/src/main/res/drawable/ic_baseline_logout_24.xml" value="0.165" />
+        <entry key="..\:/Android App/StoryApp/app/src/main/res/drawable/ic_capture.xml" value="0.278" />
         <entry key="..\:/Android App/StoryApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.267" />
+        <entry key="..\:/Android App/StoryApp/app/src/main/res/drawable/ic_place_holder.xml" value="0.278" />
+        <entry key="..\:/Android App/StoryApp/app/src/main/res/drawable/ic_switch_camera.xml" value="0.278" />
         <entry key="..\:/Android App/StoryApp/app/src/main/res/layout-w936dp/item_row_stories.xml" value="0.16" />
+        <entry key="..\:/Android App/StoryApp/app/src/main/res/layout/activity_add_story.xml" value="0.25" />
+        <entry key="..\:/Android App/StoryApp/app/src/main/res/layout/activity_camera.xml" value="0.2734375" />
         <entry key="..\:/Android App/StoryApp/app/src/main/res/layout/activity_detail.xml" value="0.33" />
         <entry key="..\:/Android App/StoryApp/app/src/main/res/layout/activity_login.xml" value="0.33" />
         <entry key="..\:/Android App/StoryApp/app/src/main/res/layout/activity_main.xml" value="0.33" />

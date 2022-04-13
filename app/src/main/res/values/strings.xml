@@ -11,4 +11,7 @@
     <string name="storiesimage">StoriesImage</string>
     <string name="logout">logout</string>
     <string name="add">add</string>
+    <string name="upload">Upload</string>
+    <string name="camera_x">Camera X</string>
+    <string name="gallery">Gallery</string>
 </resources>

@@ -2,16 +2,16 @@ package com.example.storyapp.ui.activity
 
 import android.content.Intent
 import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.storyapp.R
+import com.example.storyapp.data.local.UserSession
 import com.example.storyapp.data.remote.pojo.ListStoryItem
-import com.example.storyapp.data.remote.pojo.LoginResult
 import com.example.storyapp.databinding.ActivityMainBinding
 import com.example.storyapp.ui.adapter.ListStoriesAdapter
 import com.example.storyapp.ui.viewmodel.MainViewModel
@@ -20,19 +20,25 @@ import com.example.storyapp.ui.viewmodel.ViewModelFactory
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var userModel: LoginResult
     private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        userModel = intent.getParcelableExtra<LoginResult>(USER_SESSION) as LoginResult
 
-        mainViewModel = ViewModelProvider(this, ViewModelFactory()).get(
+        val pref = UserSession.getInstance(dataStore)
+        var userToken = String()
+
+        mainViewModel = ViewModelProvider(this, ViewModelFactory(pref)).get(
             MainViewModel::class.java
         )
-        mainViewModel.getAllStories(userModel.token as String)
+
+        mainViewModel.getToken().observe(this,
+            { token: String ->
+                mainViewModel.getAllStories(token)
+            })
+
         mainViewModel.listStories.observe(this) {listStories ->
             showRecyclerList(listStories)
         }
@@ -47,6 +53,13 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onBackPressed() {
+        val a = Intent(Intent.ACTION_MAIN)
+        a.addCategory(Intent.CATEGORY_HOME)
+        a.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(a)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.add -> {
@@ -55,8 +68,11 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
             R.id.logout -> {
-//                val i = Intent(this, MenuActivity::class.java)
-//                startActivity(i)
+                mainViewModel.saveToken("")
+                val i = Intent(this, LoginActivity::class.java)
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(i)
+                finish()
                 return true
             }
             else -> return true

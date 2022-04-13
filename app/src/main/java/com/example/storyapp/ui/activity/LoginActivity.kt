@@ -8,11 +8,13 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
+import com.example.storyapp.data.local.UserSession
 import com.example.storyapp.data.remote.api.ApiConfig
 import com.example.storyapp.data.remote.pojo.Login
 import com.example.storyapp.data.remote.pojo.LoginResult
@@ -26,6 +28,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var loginButton: LoginButton
@@ -34,8 +38,8 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
 
-    private var correctEmail: Boolean = false
-    private var correctPassword: Boolean = false
+    private var correctEmail = false
+    private var correctPassword = false
 
     private val emailRegex: Regex = Regex("^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(\\.\\w{2,3})+\$")
 
@@ -50,6 +54,8 @@ class LoginActivity : AppCompatActivity() {
         emailEditText = binding.etEmail
         passwordEditText = binding.etPassword
 
+        val pref = UserSession.getInstance(dataStore)
+
         if (!intent.getStringExtra("email").isNullOrEmpty()) {
             emailEditText.setText(intent.getStringExtra("email"))
             correctEmail = true
@@ -61,21 +67,33 @@ class LoginActivity : AppCompatActivity() {
 
         loginViewModel = ViewModelProvider (
                 this,
-        ViewModelFactory()
+        ViewModelFactory(pref)
         )[LoginViewModel::class.java]
 
         setLoginButtonEnable()
+
+        loginViewModel.getToken().observe(this
+        ) { token: String ->
+            if (token.isNotEmpty()) {
+                val i = Intent(this, MainActivity::class.java)
+                startActivity(i)
+            }
+        }
 
         emailEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                correctEmail = if (!s.isNullOrEmpty() && !emailRegex.matches(s.toString())) {
+                if (!s.isNullOrEmpty() && emailRegex.matches(s.toString())) {
+                    correctEmail = true
+                }
+                else if (!s.isNullOrEmpty() && !emailRegex.matches(s.toString())) {
                     emailEditText.error = "Invalid Email Address"
-                    false
-                } else {
-                    true
+                    correctEmail = false
+                }
+                else {
+                    correctEmail = false
                 }
                 setLoginButtonEnable()
             }
@@ -118,6 +136,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login() {
+        showLoading(true)
         val client = ApiConfig.getApiService()
             .login(emailEditText.text.toString(), passwordEditText.text.toString())
         client.enqueue(object : Callback<Login> {
@@ -125,6 +144,7 @@ class LoginActivity : AppCompatActivity() {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
                     if (responseBody.error == true) {
+                        showLoading(false)
                         Toast.makeText(this@LoginActivity, responseBody.message, Toast.LENGTH_LONG)
                             .show()
                     } else {
@@ -133,6 +153,7 @@ class LoginActivity : AppCompatActivity() {
                             .show()
                     }
                 } else {
+                    showLoading(false)
                     Log.e(TAG, "onFailure: ${response.message()}")
                     Toast.makeText(this@LoginActivity, response.message(), Toast.LENGTH_LONG)
                         .show()
@@ -140,6 +161,7 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<Login>, t: Throwable) {
+                showLoading(false)
                 Log.e(TAG, "onFailure: ${t.message}")
                 Toast.makeText(this@LoginActivity, t.message, Toast.LENGTH_LONG).show()
             }
@@ -147,14 +169,22 @@ class LoginActivity : AppCompatActivity() {
         })
     }
 
-    private fun saveSession(loginResult: LoginResult) {
-        val userModel = LoginResult(loginResult.userId, loginResult.name, loginResult.token)
-        val i = Intent(this, MainActivity::class.java)
-        i.putExtra(USER_SESSION, userModel)
-        startActivity(i)
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.apply {
+            visibility = if (isLoading) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+        }
     }
 
-    companion object {
-        const val USER_SESSION = "user_session"
+    private fun saveSession(loginResult: LoginResult) {
+        loginViewModel.saveToken(loginResult.token as String)
+        val i = Intent(this, MainActivity::class.java)
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(i)
+        showLoading(false)
+        finish()
     }
 }

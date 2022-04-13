@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import com.example.storyapp.data.remote.api.ApiConfig
 import com.example.storyapp.data.remote.pojo.Register
@@ -49,11 +50,15 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.isNullOrBlank()) {
-                    nameEditText.setError("Please Fill in Name")
-                    correctName = false
-                } else {
+                if (s!!.length >= 2) {
                     correctName = true
+                }
+                else if (s.isNullOrBlank()) {
+                    correctName = false
+                }
+                else if (!s.isNullOrBlank() && s.length < 2) {
+                    correctName = false
+                    nameEditText.error = "Name Minimum Length is 2"
                 }
                 setLoginButtonEnable()
             }
@@ -68,11 +73,15 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!s.isNullOrEmpty() && !emailRegex.matches(s.toString())) {
-                    emailEditText.setError("Invalid Email Address")
-                    correctEmail = false
-                } else {
+                if (!s.isNullOrEmpty() && emailRegex.matches(s.toString())) {
                     correctEmail = true
+                }
+                else if (!s.isNullOrEmpty() && !emailRegex.matches(s.toString())) {
+                    emailEditText.error = "Invalid Email Address"
+                    correctEmail = false
+                }
+                else {
+                    correctEmail = false
                 }
                 setLoginButtonEnable()
             }
@@ -87,12 +96,10 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!s.isNullOrEmpty() && s.length < 6) {
-                    passwordEditText.setError("Password Minimum Length is 6")
-                    correctPassword = false
-                } else {
-                    correctPassword = true
-                }
+                correctPassword = if (!s.isNullOrEmpty() && s.length < 6) {
+                    passwordEditText.error = "Password Minimum Length is 6"
+                    false
+                } else !s.isNullOrEmpty()
                 setLoginButtonEnable()
             }
 
@@ -107,6 +114,7 @@ class RegisterActivity : AppCompatActivity() {
         binding.tvAccount.setOnClickListener {
             val i = Intent(this, LoginActivity::class.java)
             startActivity(i)
+            finish()
         }
     }
 
@@ -115,8 +123,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun register() {
-        var isSuccess: Boolean = false
-
+        showLoading(true)
         val client = ApiConfig.getApiService().register(
             nameEditText.text.toString(),
             emailEditText.text.toString(),
@@ -127,6 +134,7 @@ class RegisterActivity : AppCompatActivity() {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
                     if (responseBody.error == true) {
+                        showLoading(false)
                         Toast.makeText(
                             this@RegisterActivity,
                             responseBody.message,
@@ -134,10 +142,15 @@ class RegisterActivity : AppCompatActivity() {
                         ).show()
                     } else {
                         goLogin()
-                        Toast.makeText(this@RegisterActivity, responseBody.message, Toast.LENGTH_LONG)
+                        Toast.makeText(
+                            this@RegisterActivity,
+                            responseBody.message,
+                            Toast.LENGTH_LONG
+                        )
                             .show()
                     }
                 } else {
+                    showLoading(false)
                     Log.e(ContentValues.TAG, "onFailure: ${response.message()}")
                     Toast.makeText(this@RegisterActivity, response.message(), Toast.LENGTH_LONG)
                         .show()
@@ -145,6 +158,7 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<Register>, t: Throwable) {
+                showLoading(false)
                 Log.e(ContentValues.TAG, "onFailure: ${t.message}")
                 Toast.makeText(this@RegisterActivity, t.message, Toast.LENGTH_LONG).show()
             }
@@ -152,11 +166,24 @@ class RegisterActivity : AppCompatActivity() {
         })
     }
 
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.apply {
+            visibility = if (isLoading) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+        }
+    }
+
     private fun goLogin() {
         val i = Intent(this, LoginActivity::class.java)
         i.putExtra("email", emailEditText.text.toString())
         i.putExtra("password", passwordEditText.text.toString())
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(i)
+        showLoading(false)
+        finish()
     }
 
 }
