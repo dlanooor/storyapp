@@ -1,22 +1,22 @@
 package com.example.storyapp.ui.adapter
 
+import android.app.Activity
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.storyapp.R
 import com.example.storyapp.data.remote.pojo.ListStoryItem
+import com.example.storyapp.ui.activity.DetailActivity
+import androidx.core.util.Pair
 
 class ListStoriesAdapter(private val listStories: ArrayList<ListStoryItem>) :
     RecyclerView.Adapter<ListStoriesAdapter.ListViewHolder>() {
-    private lateinit var onItemClickCallback: OnItemClickCallback
-
-    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
-        this.onItemClickCallback = onItemClickCallback
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
         val view: View =
@@ -25,21 +25,39 @@ class ListStoriesAdapter(private val listStories: ArrayList<ListStoryItem>) :
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        holder.tvUsername.text = listStories[position].name
-        Glide.with(holder.itemView.context).load(listStories[position].photoUrl)
-            .into(holder.imgPhoto)
-        holder.itemView.setOnClickListener { onItemClickCallback.onItemClicked(listStories[holder.adapterPosition]) }
+        holder.bind(listStories[position])
     }
 
     override fun getItemCount(): Int = listStories.size
 
     class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var imgPhoto: ImageView = itemView.findViewById(R.id.im_item_photo)
-        var tvUsername: TextView = itemView.findViewById(R.id.tv_item_name)
+        private var imgPhoto: ImageView = itemView.findViewById(R.id.im_item_photo)
+        private var tvUsername: TextView = itemView.findViewById(R.id.tv_item_name)
+        private var tvDescription: TextView = itemView.findViewById(R.id.tv_item_description)
+
+        fun bind(stories: ListStoryItem) {
+            tvUsername.text = stories.name
+            tvDescription.text = stories.description
+            Glide.with(itemView.context).load(stories.photoUrl).into(imgPhoto)
+
+            itemView.setOnClickListener {
+                val intent = Intent(itemView.context, DetailActivity::class.java)
+                intent.putExtra(STORIES, stories)
+
+                val optionsCompat: ActivityOptionsCompat =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        itemView.context as Activity,
+                        Pair(imgPhoto, "profile"),
+                        Pair(tvUsername, "name"),
+                        Pair(tvDescription, "description"),
+                    )
+                itemView.context.startActivity(intent, optionsCompat.toBundle())
+            }
+        }
     }
 
-    interface OnItemClickCallback {
-        fun onItemClicked(data: ListStoryItem)
+    companion object {
+        const val STORIES = "stories"
     }
 
 }

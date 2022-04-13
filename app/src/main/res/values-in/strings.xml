@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">StoryApp</string>
+    <string name="login">LOGIN</string>
+    <string name="email">Email</string>
+    <string name="password">Kata Sandi</string>
+    <string name="dont_hv_acc">Tidak punya Akun ? Daftar</string>
+    <string name="hv_acc">Punya Akun ? Login</string>
+    <string name="name">Nama</string>
+    <string name="description">Deskripsi</string>
+    <string name="storiesimage">StoriesImage</string>
+    <string name="logout">Keluar</string>
+    <string name="add">Tambahkan</string>
+    <string name="upload">Unggah</string>
+    <string name="camera_x">Camera X</string>
+    <string name="gallery">Gallery</string>
+    <string name="profile">profile</string>
+    <string name="failed_take_picture">Gagal Mengambil Gambar</string>
+    <string name="failed_open_camera">Gagal Membuka Kamera</string>
+    <string name="doesnt_get_permission">Tidak Mendapatkan Izin</string>
+    <string name="fill_in">Tolong untuk Mengisi</string>
+    <string name="choose_picture">Pilih Sebuah Gambar</string>
+    <string name="failed_retrofit">Gagal Membuat Instace Retrofit</string>
+    <string name="select_image">Pilih Gambar Terlebih Dahulu</string>
+    <string name="invalid_email">Alamat Email Tidak Sesuai</string>
+    <string name="minimum_password">Panjang Password Minimal adalah 6</string>
+    <string name="login_sucess">Login Berhasil</string>
+    <string name="minimum_name">Panjang Password Nama adalah 2</string>
+    <string name="register">Daftar</string>
+    <string name="language">Bahasa</string>
+    <string name="logo">logo</string>
+    <string name="image">gambar</string>
+    <string name="switch_camera">tukar kamera</string>
+</resources>

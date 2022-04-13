@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.example.storyapp.R
 import com.example.storyapp.data.local.UserSession
 import com.example.storyapp.databinding.ActivityAddStoryBinding
 import com.example.storyapp.ui.activity.camera.CameraActivity
@@ -79,7 +80,7 @@ class AddStoryActivity : AppCompatActivity() {
             if (!allPermissionsGranted()) {
                 Toast.makeText(
                     this,
-                    "Tidak mendapatkan permission.",
+                    getString(R.string.doesnt_get_permission),
                     Toast.LENGTH_SHORT
                 ).show()
                 finish()
@@ -97,7 +98,8 @@ class AddStoryActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val pref = UserSession.getInstance(dataStore)
-        addStoryViewModel = ViewModelProvider(this, ViewModelFactory(pref))[AddStoryViewModel::class.java]
+        addStoryViewModel =
+            ViewModelProvider(this, ViewModelFactory(pref))[AddStoryViewModel::class.java]
 
         if (!allPermissionsGranted()) {
             ActivityCompat.requestPermissions(
@@ -116,7 +118,7 @@ class AddStoryActivity : AppCompatActivity() {
                     binding.uploadButton.isEnabled = true
                 } else {
                     binding.uploadButton.isEnabled = false
-                    binding.edDescription.error = "Please Fill In"
+                    binding.edDescription.error = getString(R.string.fill_in)
                 }
             }
 
@@ -138,7 +140,7 @@ class AddStoryActivity : AppCompatActivity() {
         val intent = Intent()
         intent.action = ACTION_GET_CONTENT
         intent.type = "image/*"
-        val chooser = Intent.createChooser(intent, "Choose a Picture")
+        val chooser = Intent.createChooser(intent, getString(R.string.choose_picture))
         launcherIntentGallery.launch(chooser)
     }
 
@@ -191,7 +193,7 @@ class AddStoryActivity : AppCompatActivity() {
                         showLoading(false)
                         Toast.makeText(
                             this@AddStoryActivity,
-                            "Gagal instance Retrofit",
+                            getString(R.string.failed_retrofit),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -200,7 +202,7 @@ class AddStoryActivity : AppCompatActivity() {
         } else {
             Toast.makeText(
                 this@AddStoryActivity,
-                "Silakan masukkan berkas gambar terlebih dahulu.",
+                getString(R.string.select_image),
                 Toast.LENGTH_SHORT
             ).show()
         }

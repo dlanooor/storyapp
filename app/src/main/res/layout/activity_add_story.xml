@@ -20,14 +20,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_place_holder" />
+        app:srcCompat="@drawable/ic_place_holder"
+        android:contentDescription="@string/image" />
 
     <Button
         android:id="@+id/camerax_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:scaleType="fitCenter"
         android:text="@string/camera_x"
         app:layout_constraintBottom_toTopOf="@+id/ti_layout"

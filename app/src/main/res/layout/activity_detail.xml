@@ -35,6 +35,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:transitionName="@string/profile"
                 tools:src="@tools:sample/avatars" />
 
             <TextView
@@ -45,6 +46,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/im_item_photo"
+                android:transitionName="@string/name"
                 tools:text="@string/name" />
 
             <TextView
@@ -55,6 +57,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_item_name"
+                android:transitionName="@string/description"
                 tools:text="@string/description" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

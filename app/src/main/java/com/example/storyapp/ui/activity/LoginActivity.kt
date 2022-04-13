@@ -14,6 +14,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
+import com.example.storyapp.R
 import com.example.storyapp.data.local.UserSession
 import com.example.storyapp.data.remote.api.ApiConfig
 import com.example.storyapp.data.remote.pojo.Login
@@ -89,7 +90,7 @@ class LoginActivity : AppCompatActivity() {
                 if (!s.isNullOrEmpty() && emailRegex.matches(s.toString())) {
                     correctEmail = true
                 } else if (!s.isNullOrEmpty() && !emailRegex.matches(s.toString())) {
-                    emailEditText.error = "Invalid Email Address"
+                    emailEditText.error = getString(R.string.invalid_email)
                     correctEmail = false
                 } else {
                     correctEmail = false
@@ -108,7 +109,7 @@ class LoginActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 correctPassword = if (!s.isNullOrEmpty() && s.length < 6) {
-                    passwordEditText.error = "Password Minimum Length is 6"
+                    passwordEditText.error = getString(R.string.minimum_password)
                     false
                 } else {
                     true
@@ -148,7 +149,11 @@ class LoginActivity : AppCompatActivity() {
                             .show()
                     } else {
                         saveSession(responseBody.loginResult as LoginResult)
-                        Toast.makeText(this@LoginActivity, "Login Success", Toast.LENGTH_LONG)
+                        Toast.makeText(
+                            this@LoginActivity,
+                            getString(R.string.login_sucess),
+                            Toast.LENGTH_LONG
+                        )
                             .show()
                     }
                 } else {

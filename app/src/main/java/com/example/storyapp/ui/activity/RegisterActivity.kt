@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.example.storyapp.R
 import com.example.storyapp.data.remote.api.ApiConfig
 import com.example.storyapp.data.remote.pojo.Register
 import com.example.storyapp.databinding.ActivityRegisterBinding
@@ -56,7 +57,7 @@ class RegisterActivity : AppCompatActivity() {
                     correctName = false
                 } else if (!s.isNullOrBlank() && s.length < 2) {
                     correctName = false
-                    nameEditText.error = "Name Minimum Length is 2"
+                    nameEditText.error = getString(R.string.minimum_name)
                 }
                 setLoginButtonEnable()
             }
@@ -74,7 +75,7 @@ class RegisterActivity : AppCompatActivity() {
                 if (!s.isNullOrEmpty() && emailRegex.matches(s.toString())) {
                     correctEmail = true
                 } else if (!s.isNullOrEmpty() && !emailRegex.matches(s.toString())) {
-                    emailEditText.error = "Invalid Email Address"
+                    emailEditText.error = getString(R.string.invalid_email)
                     correctEmail = false
                 } else {
                     correctEmail = false
@@ -93,7 +94,7 @@ class RegisterActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 correctPassword = if (!s.isNullOrEmpty() && s.length < 6) {
-                    passwordEditText.error = "Password Minimum Length is 6"
+                    passwordEditText.error = getString(R.string.minimum_password)
                     false
                 } else !s.isNullOrEmpty()
                 setLoginButtonEnable()

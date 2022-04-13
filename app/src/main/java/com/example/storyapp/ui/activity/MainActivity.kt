@@ -3,6 +3,7 @@ package com.example.storyapp.ui.activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -31,12 +32,13 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel = ViewModelProvider(this, ViewModelFactory(pref))[MainViewModel::class.java]
 
-        mainViewModel.getToken().observe(this
+        mainViewModel.getToken().observe(
+            this
         ) { token: String ->
             mainViewModel.getAllStories(token)
         }
 
-        mainViewModel.listStories.observe(this) {listStories ->
+        mainViewModel.listStories.observe(this) { listStories ->
             showRecyclerList(listStories)
         }
         mainViewModel.isLoading.observe(this) {
@@ -59,6 +61,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.language -> {
+                startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
+                return true
+            }
             R.id.add -> {
                 val i = Intent(this, AddStoryActivity::class.java)
                 startActivity(i)
@@ -89,14 +95,6 @@ class MainActivity : AppCompatActivity() {
             arrayListStories.addAll(listStories)
             val listStoriesAdapter = ListStoriesAdapter(arrayListStories)
             rvStories.adapter = listStoriesAdapter
-
-            listStoriesAdapter.setOnItemClickCallback(object : ListStoriesAdapter.OnItemClickCallback {
-                override fun onItemClicked(data: ListStoryItem) {
-                    val intentToDetail = Intent(this@MainActivity, DetailActivity::class.java)
-                    intentToDetail.putExtra(STORIES, data)
-                    startActivity(intentToDetail)
-                }
-            })
         }
     }
 
@@ -109,9 +107,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    companion object {
-        const val STORIES = "stories"
-    }
-
 }

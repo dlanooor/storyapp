@@ -14,7 +14,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@color/red_6"
         android:padding="8dp">
 
@@ -28,6 +28,7 @@
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
+            card_view:layout_constraintBottom_toTopOf="@id/tv_item_name"
             tools:src="@tools:sample/avatars" />
 
         <TextView
@@ -35,12 +36,29 @@
             style="@style/TextContent.White"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/im_item_photo"
-            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintBottom_toBottomOf="@id/tv_item_description"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/im_item_photo"
             tools:text="@string/name" />
+
+        <TextView
+            android:id="@+id/tv_item_description"
+            style="@style/TextContent.White"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="2dp"
+            android:layout_toEndOf="@+id/im_item_photo"
+            android:textSize="12sp"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toBottomOf="@+id/tv_item_name"
+            tools:text="@string/description" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
