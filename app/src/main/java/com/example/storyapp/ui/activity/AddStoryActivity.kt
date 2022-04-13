@@ -8,6 +8,9 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -18,6 +21,7 @@ import com.example.storyapp.databinding.ActivityAddStoryBinding
 import com.example.storyapp.ui.activity.camera.CameraActivity
 import com.example.storyapp.data.remote.api.ApiConfig
 import com.example.storyapp.data.remote.pojo.AddNewStory
+import com.example.storyapp.data.remote.pojo.LoginResult
 import com.example.storyapp.ui.activity.camera.reduceFileImage
 import com.example.storyapp.ui.activity.camera.rotateBitmap
 import com.example.storyapp.ui.activity.camera.uriToFile
@@ -105,6 +109,25 @@ class AddStoryActivity : AppCompatActivity() {
                 REQUEST_CODE_PERMISSIONS
             )
         }
+
+        binding.edDescription.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (!s.isNullOrBlank()) {
+                    binding.uploadButton.isEnabled = true
+                }
+                else {
+                    binding.uploadButton.isEnabled = false
+                    binding.edDescription.error = "Please Fill In"
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+        })
         binding.cameraxButton.setOnClickListener { startCameraX() }
         binding.galleryButton.setOnClickListener { startGallery() }
         binding.uploadButton.setOnClickListener { uploadImage() }
@@ -126,9 +149,8 @@ class AddStoryActivity : AppCompatActivity() {
     private fun uploadImage() {
         if (getFile != null) {
             val file = reduceFileImage(getFile as File)
-
-            //descipritonnya masi error
-            val description = binding.edDescription.toString().toRequestBody("text/plain".toMediaType())
+            val description =
+                binding.edDescription.text.toString().toRequestBody("text/plain".toMediaType())
             val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
                 "photo",
@@ -142,23 +164,40 @@ class AddStoryActivity : AppCompatActivity() {
                     println(token)
                     val service = ApiConfig.getApiService()
                         .uploadStories("Bearer " + token, imageMultipart, description)
-
+                    showLoading(true)
                     service.enqueue(object : Callback<AddNewStory> {
                         override fun onResponse(
                             call: Call<AddNewStory>,
                             response: Response<AddNewStory>
                         ) {
                             if (response.isSuccessful) {
+                                showLoading(false)
                                 val responseBody = response.body()
                                 if (responseBody != null && !responseBody.error!!) {
-                                    Toast.makeText(this@AddStoryActivity, responseBody.message, Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        this@AddStoryActivity,
+                                        responseBody.message,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    intentMain()
                                 }
                             } else {
-                                Toast.makeText(this@AddStoryActivity, response.message(), Toast.LENGTH_SHORT).show()
+                                showLoading(false)
+                                Toast.makeText(
+                                    this@AddStoryActivity,
+                                    response.message(),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
+
                         override fun onFailure(call: Call<AddNewStory>, t: Throwable) {
-                            Toast.makeText(this@AddStoryActivity, "Gagal instance Retrofit", Toast.LENGTH_SHORT).show()
+                            showLoading(false)
+                            Toast.makeText(
+                                this@AddStoryActivity,
+                                "Gagal instance Retrofit",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     })
                 })
@@ -171,11 +210,28 @@ class AddStoryActivity : AppCompatActivity() {
         }
     }
 
+
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.apply {
+            visibility = if (isLoading) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+        }
+    }
+
+    private fun intentMain() {
+        val i = Intent(this, MainActivity::class.java)
+        startActivity(i)
+        showLoading(false)
+        finish()
+    }
     companion object {
         const val CAMERA_X_RESULT = 200
 
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
         private const val REQUEST_CODE_PERMISSIONS = 10
     }
-
 }
