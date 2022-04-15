@@ -11,7 +11,6 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import com.example.storyapp.R
 import com.example.storyapp.data.remote.api.ApiConfig
 import com.example.storyapp.data.remote.pojo.Register
 import com.example.storyapp.databinding.ActivityRegisterBinding
@@ -34,8 +33,6 @@ class RegisterActivity : AppCompatActivity() {
     private var correctPassword: Boolean = false
     private var correctName: Boolean = false
 
-    private val emailRegex: Regex = Regex("^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(\\.\\w{2,3})+\$")
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
@@ -54,13 +51,8 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s!!.length >= 2) {
-                    correctName = true
-                } else if (s.isNullOrBlank()) {
-                    correctName = false
-                } else if (!s.isNullOrBlank() && s.length < 2) {
-                    correctName = false
-                    nameEditText.error = getString(R.string.minimum_name)
+                if (s != null) {
+                    correctName = s.length >= 2
                 }
                 setLoginButtonEnable()
             }
@@ -75,14 +67,8 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!s.isNullOrEmpty() && emailRegex.matches(s.toString())) {
-                    correctEmail = true
-                } else if (!s.isNullOrEmpty() && !emailRegex.matches(s.toString())) {
-                    emailEditText.error = getString(R.string.invalid_email)
-                    correctEmail = false
-                } else {
-                    correctEmail = false
-                }
+                correctEmail =
+                    !s.isNullOrEmpty() && LoginActivity.emailRegex.matches(s.toString())
                 setLoginButtonEnable()
             }
 
@@ -96,10 +82,7 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                correctPassword = if (!s.isNullOrEmpty() && s.length < 6) {
-                    passwordEditText.error = getString(R.string.minimum_password)
-                    false
-                } else !s.isNullOrEmpty()
+                correctPassword = !(!s.isNullOrEmpty() && s.length < 6)
                 setLoginButtonEnable()
             }
 

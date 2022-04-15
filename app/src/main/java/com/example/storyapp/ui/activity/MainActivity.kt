@@ -1,5 +1,6 @@
 package com.example.storyapp.ui.activity
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
@@ -8,6 +9,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.storyapp.R
@@ -17,6 +21,8 @@ import com.example.storyapp.databinding.ActivityMainBinding
 import com.example.storyapp.ui.adapter.ListStoriesAdapter
 import com.example.storyapp.ui.viewmodel.MainViewModel
 import com.example.storyapp.ui.viewmodel.ViewModelFactory
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,7 +41,13 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.getToken().observe(
             this
         ) { token: String ->
-            mainViewModel.getAllStories(token)
+            if (token.isEmpty()) {
+                val i = Intent(this, LoginActivity::class.java)
+                startActivity(i)
+                finish()
+            } else {
+                mainViewModel.getAllStories(token)
+            }
         }
 
         mainViewModel.listStories.observe(this) { listStories ->
@@ -46,17 +58,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.option_menu, menu)
-        return true
-    }
-
     override fun onBackPressed() {
         val a = Intent(Intent.ACTION_MAIN)
         a.addCategory(Intent.CATEGORY_HOME)
         a.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(a)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.option_menu, menu)
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -73,9 +85,8 @@ class MainActivity : AppCompatActivity() {
             R.id.logout -> {
                 mainViewModel.saveToken("")
                 val i = Intent(this, LoginActivity::class.java)
-                i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(i)
-                finish()
                 return true
             }
             else -> return true

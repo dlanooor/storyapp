@@ -3,7 +3,6 @@ package com.example.storyapp.ui.activity
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.ContentValues.TAG
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,9 +11,6 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import com.example.storyapp.R
 import com.example.storyapp.data.local.UserSession
@@ -31,8 +27,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var loginButton: LoginButton
@@ -43,8 +37,6 @@ class LoginActivity : AppCompatActivity() {
 
     private var correctEmail = false
     private var correctPassword = false
-
-    private val emailRegex: Regex = Regex("^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(\\.\\w{2,3})+\$")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,28 +68,13 @@ class LoginActivity : AppCompatActivity() {
 
         setLoginButtonEnable()
 
-        loginViewModel.getToken().observe(
-            this
-        ) { token: String ->
-            if (token.isNotEmpty()) {
-                val i = Intent(this, MainActivity::class.java)
-                startActivity(i)
-            }
-        }
-
         emailEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!s.isNullOrEmpty() && emailRegex.matches(s.toString())) {
-                    correctEmail = true
-                } else if (!s.isNullOrEmpty() && !emailRegex.matches(s.toString())) {
-                    emailEditText.error = getString(R.string.invalid_email)
-                    correctEmail = false
-                } else {
-                    correctEmail = false
-                }
+                correctEmail =
+                    !s.isNullOrEmpty() && emailRegex.matches(s.toString())
                 setLoginButtonEnable()
             }
 
@@ -111,12 +88,7 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                correctPassword = if (!s.isNullOrEmpty() && s.length < 6) {
-                    passwordEditText.error = getString(R.string.minimum_password)
-                    false
-                } else {
-                    true
-                }
+                correctPassword = !(!s.isNullOrEmpty() && s.length < 6)
                 setLoginButtonEnable()
             }
 
@@ -131,6 +103,7 @@ class LoginActivity : AppCompatActivity() {
         binding.tvAccount.setOnClickListener {
             val i = Intent(this, RegisterActivity::class.java)
             startActivity(i)
+            finish()
         }
     }
 
@@ -220,16 +193,17 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun saveSession(loginResult: LoginResult) {
+        showLoading(false)
         loginViewModel.saveToken(loginResult.token as String)
         val i = Intent(this, MainActivity::class.java)
-        i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(i)
-        showLoading(false)
         finish()
     }
 
     companion object {
         private const val DURATION = 200L
         private const val ALPHA = 1f
+        val emailRegex: Regex = Regex("^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(\\.\\w{2,3})+\$")
     }
 }
