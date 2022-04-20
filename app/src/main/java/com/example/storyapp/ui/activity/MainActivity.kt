@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
+    private lateinit var arrayListStories: ArrayList<ListStoryItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +78,12 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
                 return true
             }
+            R.id.map -> {
+                val i = Intent(this, MapsActivity::class.java)
+                i.putExtra(ARRAY_LIST_STORIES, arrayListStories)
+                startActivity(i)
+                return true
+            }
             R.id.add -> {
                 val i = Intent(this, AddStoryActivity::class.java)
                 startActivity(i)
@@ -102,7 +109,7 @@ class MainActivity : AppCompatActivity() {
             else
                 rvStories.layoutManager = GridLayoutManager(this@MainActivity, 2)
 
-            val arrayListStories = ArrayList<ListStoryItem>()
+            arrayListStories = ArrayList()
             arrayListStories.addAll(listStories)
             val listStoriesAdapter = ListStoriesAdapter(arrayListStories)
             rvStories.adapter = listStoriesAdapter
@@ -117,5 +124,9 @@ class MainActivity : AppCompatActivity() {
                 View.GONE
             }
         }
+    }
+
+    companion object {
+        const val ARRAY_LIST_STORIES = "array_list_stories"
     }
 }

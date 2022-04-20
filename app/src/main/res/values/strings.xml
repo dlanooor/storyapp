@@ -30,4 +30,7 @@
     <string name="logo">logo</string>
     <string name="image">image</string>
     <string name="switch_camera">Switch Camera</string>
+    <string name="google_map">GoogleMap</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="normal_type">Normal Type</string>
 </resources>

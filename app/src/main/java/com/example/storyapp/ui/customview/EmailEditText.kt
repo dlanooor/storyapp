@@ -46,7 +46,6 @@ class EmailEditText : AppCompatEditText, View.OnTouchListener {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (!s.isNullOrEmpty() && !emailRegex.matches(s.toString())) {
-                    getString()
                     error = "Wrong Email Format"
                 }
             }
