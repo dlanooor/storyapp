@@ -17,9 +17,10 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         detailStories = intent.getParcelableExtra<ListStoryItem>(STORIES) as ListStoryItem
-        binding.tvItemName.text = detailStories.name
-        binding.tvItemDescription.text = detailStories.description
-
+        binding.apply {
+            tvItemName.text = detailStories.name
+            tvItemDescription.text = detailStories.description
+        }
         Glide.with(applicationContext)
             .load(detailStories.photoUrl)
             .into(binding.imItemPhoto)
