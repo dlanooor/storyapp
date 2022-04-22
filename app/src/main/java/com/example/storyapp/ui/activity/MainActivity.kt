@@ -16,6 +16,7 @@ import com.example.storyapp.R
 import com.example.storyapp.data.local.UserSession
 import com.example.storyapp.databinding.ActivityMainBinding
 import com.example.storyapp.ui.adapter.ListStoriesAdapter
+import com.example.storyapp.ui.adapter.LoadingStateAdapter
 import com.example.storyapp.ui.viewmodel.MainViewModel
 import com.example.storyapp.ui.viewmodel.factory.ViewModelFactory
 
@@ -46,7 +47,11 @@ class MainActivity : AppCompatActivity() {
             } else {
                 binding.rvStories.layoutManager = LinearLayoutManager(this)
                 val adapter = ListStoriesAdapter()
-                binding.rvStories.adapter = adapter
+                binding.rvStories.adapter = adapter.withLoadStateFooter(
+                    footer = LoadingStateAdapter {
+                        adapter.retry()
+                    }
+                )
 
                 mainViewModel.getStories(token).observe(this) {
                     adapter.submitData(lifecycle, it)
