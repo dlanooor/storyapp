@@ -12,11 +12,12 @@ import com.bumptech.glide.Glide
 import com.example.storyapp.data.remote.pojo.ListStoryItem
 import com.example.storyapp.ui.activity.DetailActivity
 import androidx.core.util.Pair
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.storyapp.databinding.ItemRowStoriesBinding
 
-class ListStoriesAdapter : ListAdapter<ListStoryItem, ListStoriesAdapter.ListViewHolder>(
+class ListStoriesAdapter : PagingDataAdapter<ListStoryItem, ListStoriesAdapter.ListViewHolder>(
     DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
@@ -25,7 +26,7 @@ class ListStoriesAdapter : ListAdapter<ListStoryItem, ListStoriesAdapter.ListVie
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position) as ListStoryItem)
     }
 
     class ListViewHolder(binding : ItemRowStoriesBinding) : RecyclerView.ViewHolder(binding.root) {

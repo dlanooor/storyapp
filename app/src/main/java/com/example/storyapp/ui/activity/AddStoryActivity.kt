@@ -27,14 +27,12 @@ import com.example.storyapp.ui.activity.camera.reduceFileImage
 import com.example.storyapp.ui.activity.camera.rotateBitmap
 import com.example.storyapp.ui.activity.camera.uriToFile
 import com.example.storyapp.ui.viewmodel.AddStoryViewModel
-import com.example.storyapp.ui.viewmodel.ViewModelFactory
+import com.example.storyapp.ui.viewmodel.factory.ViewModelFactory
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call

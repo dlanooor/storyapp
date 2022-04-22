@@ -1,10 +1,13 @@
-package com.example.storyapp.ui.viewmodel
+package com.example.storyapp.ui.viewmodel.factory
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.storyapp.data.local.UserSession
 import com.example.storyapp.data.local.di.Injection
+import com.example.storyapp.ui.viewmodel.AddStoryViewModel
+import com.example.storyapp.ui.viewmodel.LoginViewModel
+import com.example.storyapp.ui.viewmodel.MainViewModel
 
 class ViewModelFactory(private val pref: UserSession, private val context: Context) : ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")

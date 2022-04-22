@@ -22,7 +22,7 @@ import com.example.storyapp.ui.customview.LoginButton
 import com.example.storyapp.ui.customview.PasswordEditText
 import com.example.storyapp.databinding.ActivityLoginBinding
 import com.example.storyapp.ui.viewmodel.LoginViewModel
-import com.example.storyapp.ui.viewmodel.ViewModelFactory
+import com.example.storyapp.ui.viewmodel.factory.ViewModelFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

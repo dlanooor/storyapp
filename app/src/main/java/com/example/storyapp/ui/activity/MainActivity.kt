@@ -2,18 +2,15 @@ package com.example.storyapp.ui.activity
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.R
 import com.example.storyapp.data.local.UserSession
@@ -21,7 +18,7 @@ import com.example.storyapp.data.remote.pojo.ListStoryItem
 import com.example.storyapp.databinding.ActivityMainBinding
 import com.example.storyapp.ui.adapter.ListStoriesAdapter
 import com.example.storyapp.ui.viewmodel.MainViewModel
-import com.example.storyapp.ui.viewmodel.ViewModelFactory
+import com.example.storyapp.ui.viewmodel.factory.ViewModelFactory
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -38,7 +35,8 @@ class MainActivity : AppCompatActivity() {
 
         val pref = UserSession.getInstance(dataStore)
 
-        mainViewModel = ViewModelProvider(this, ViewModelFactory(pref, this))[MainViewModel::class.java]
+        mainViewModel =
+            ViewModelProvider(this, ViewModelFactory(pref, this))[MainViewModel::class.java]
 
         mainViewModel.getToken().observe(
             this
@@ -48,13 +46,15 @@ class MainActivity : AppCompatActivity() {
                 startActivity(i)
                 finish()
             } else {
-                mainViewModel.getAllStories(token)
-            }
-        }
+                binding.rvStories.layoutManager = LinearLayoutManager(this)
+                val adapter = ListStoriesAdapter()
+                binding.rvStories.adapter = adapter
 
-        showRecyclerList()
-        mainViewModel.isLoading.observe(this) {
-            showLoading(it)
+                mainViewModel.getStories(token).observe(this) {
+                    adapter.submitData(lifecycle, it)
+                }
+
+            }
         }
     }
 
@@ -78,6 +78,7 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
             R.id.map -> {
+                // add new end point api
                 val i = Intent(this, MapsActivity::class.java)
                 i.putExtra(ARRAY_LIST_STORIES, arrayListStories)
                 startActivity(i)
@@ -96,25 +97,6 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
             else -> return true
-        }
-    }
-
-    private fun showRecyclerList() {
-        binding.rvStories.layoutManager = LinearLayoutManager(this)
-        val adapter = ListStoriesAdapter()
-        binding.rvStories.adapter = adapter
-        mainViewModel.listStories.observe(this) {
-            adapter.submitList(it.toMutableList())
-        }
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        binding.progressBar.apply {
-            visibility = if (isLoading) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
         }
     }
 
