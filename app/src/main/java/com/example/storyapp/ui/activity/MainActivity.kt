@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.R
 import com.example.storyapp.data.local.UserSession
-import com.example.storyapp.data.remote.pojo.ListStoryItem
 import com.example.storyapp.databinding.ActivityMainBinding
 import com.example.storyapp.ui.adapter.ListStoriesAdapter
 import com.example.storyapp.ui.viewmodel.MainViewModel
@@ -26,7 +25,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
-    private lateinit var arrayListStories: ArrayList<ListStoryItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,9 +76,7 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
             R.id.map -> {
-                // add new end point api
                 val i = Intent(this, MapsActivity::class.java)
-                i.putExtra(ARRAY_LIST_STORIES, arrayListStories)
                 startActivity(i)
                 return true
             }
@@ -98,9 +94,5 @@ class MainActivity : AppCompatActivity() {
             }
             else -> return true
         }
-    }
-
-    companion object {
-        const val ARRAY_LIST_STORIES = "array_list_stories"
     }
 }

@@ -21,4 +21,8 @@ class StoryRepository (private val storyDatabase: StoryDatabase, private val api
             }
         ).liveData
     }
+
+    suspend fun getLocation(token: String): List<ListStoryItem> {
+        return apiService.getStoriesLocation("bearer $token").listStory as List<ListStoryItem>
+    }
 }

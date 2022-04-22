@@ -9,9 +9,12 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import com.example.storyapp.R
-import com.example.storyapp.data.remote.pojo.ListStoryItem
+import com.example.storyapp.data.local.UserSession
 import com.example.storyapp.databinding.ActivityMapsBinding
+import com.example.storyapp.ui.viewmodel.MapsViewModel
+import com.example.storyapp.ui.viewmodel.factory.ViewModelFactory
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -25,7 +28,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
-    private lateinit var arrayListStories: ArrayList<ListStoryItem>
+    private lateinit var mapsViewModel: MapsViewModel
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
@@ -40,7 +43,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        arrayListStories = intent.getParcelableArrayListExtra<ListStoryItem>(MainActivity.ARRAY_LIST_STORIES) as ArrayList<ListStoryItem>
+        val pref = UserSession.getInstance(dataStore)
+
+        mapsViewModel =
+            ViewModelProvider(this, ViewModelFactory(pref, this))[MapsViewModel::class.java]
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -55,19 +61,30 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.uiSettings.isCompassEnabled = true
         mMap.uiSettings.isMapToolbarEnabled = true
 
-        for (story in arrayListStories) {
-            if (story.lat != null && story.lon != null) {
-                val position = LatLng(story.lat, story.lon)
-                mMap.addMarker(
-                    MarkerOptions()
-                        .position(position)
-                        .title(story.name)
-                        .snippet(story.description)
-                )
+        mapsViewModel.getToken().observe(
+            this
+        ) { token: String ->
+            if (token.isNotEmpty()) {
+                mapsViewModel.getLocation(token)
             }
         }
-        val firstLocation = LatLng(arrayListStories.get(0).lat as Double, arrayListStories.get(0).lon as Double)
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(firstLocation, 15f))
+        
+        mapsViewModel.listStory.observe(this) {
+            for (story in it) {
+                if (story.lat != null && story.lon != null) {
+                    val position = LatLng(story.lat, story.lon)
+                    mMap.addMarker(
+                        MarkerOptions()
+                            .position(position)
+                            .title(story.name)
+                            .snippet(story.description)
+                    )
+                }
+            }
+            val firstLocation = LatLng(it[0].lat as Double, it[0].lon as Double)
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(firstLocation, 15f))
+        }
+        
         getMyLocation()
         setMapStyle()
     }

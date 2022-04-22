@@ -8,6 +8,7 @@ import com.example.storyapp.data.local.di.Injection
 import com.example.storyapp.ui.viewmodel.AddStoryViewModel
 import com.example.storyapp.ui.viewmodel.LoginViewModel
 import com.example.storyapp.ui.viewmodel.MainViewModel
+import com.example.storyapp.ui.viewmodel.MapsViewModel
 
 class ViewModelFactory(private val pref: UserSession, private val context: Context) : ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
@@ -21,6 +22,9 @@ class ViewModelFactory(private val pref: UserSession, private val context: Conte
             }
             modelClass.isAssignableFrom(AddStoryViewModel::class.java) -> {
                 AddStoryViewModel(pref) as T
+            }
+            modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
+                MapsViewModel(pref, Injection.provideRepository(context)) as T
             }
             else -> throw IllegalArgumentException("Unknown Viewmodel Class: " + modelClass.name)
         }
