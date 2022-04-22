@@ -14,6 +14,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.R
 import com.example.storyapp.data.local.UserSession
 import com.example.storyapp.data.remote.pojo.ListStoryItem
@@ -51,9 +52,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        mainViewModel.listStories.observe(this) { listStories ->
-            showRecyclerList(listStories)
-        }
+        showRecyclerList()
         mainViewModel.isLoading.observe(this) {
             showLoading(it)
         }
@@ -100,19 +99,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showRecyclerList(listStories: List<ListStoryItem>) {
-        binding.apply {
-            rvStories.setHasFixedSize(true)
-
-            if (applicationContext.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
-                rvStories.layoutManager = GridLayoutManager(this@MainActivity, 4)
-            else
-                rvStories.layoutManager = GridLayoutManager(this@MainActivity, 2)
-
-            arrayListStories = ArrayList()
-            arrayListStories.addAll(listStories)
-            val listStoriesAdapter = ListStoriesAdapter(arrayListStories)
-            rvStories.adapter = listStoriesAdapter
+    private fun showRecyclerList() {
+        binding.rvStories.layoutManager = LinearLayoutManager(this)
+        val adapter = ListStoriesAdapter()
+        binding.rvStories.adapter = adapter
+        mainViewModel.listStories.observe(this) {
+            adapter.submitList(it.toMutableList())
         }
     }
 

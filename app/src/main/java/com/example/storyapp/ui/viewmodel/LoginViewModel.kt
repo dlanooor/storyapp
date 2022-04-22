@@ -8,10 +8,6 @@ import com.example.storyapp.data.local.UserSession
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val pref: UserSession) : ViewModel() {
-    fun getToken(): LiveData<String> {
-        return pref.getToken().asLiveData()
-    }
-
     fun saveToken(token: String) {
         viewModelScope.launch {
             pref.saveToken(token)

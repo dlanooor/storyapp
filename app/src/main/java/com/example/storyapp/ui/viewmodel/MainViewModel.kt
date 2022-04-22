@@ -23,7 +23,7 @@ class MainViewModel(private val pref: UserSession, private val storyRepository: 
         }
     }
 
-    fun getAllStories(token: String) {
+    fun getAllStories(token: String){
         _isLoading.value = true
         viewModelScope.launch {
             _listStories.postValue(storyRepository.getStory(token))
