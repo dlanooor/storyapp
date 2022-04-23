@@ -61,7 +61,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.uiSettings.isCompassEnabled = true
         mMap.uiSettings.isMapToolbarEnabled = true
 
-        mapsViewModel.getToken().observe(
+        mapsViewModel.userToken.observe(
             this
         ) { token: String ->
             if (token.isNotEmpty()) {

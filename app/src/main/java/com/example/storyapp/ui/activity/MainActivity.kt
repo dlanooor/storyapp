@@ -37,9 +37,8 @@ class MainActivity : AppCompatActivity() {
         mainViewModel =
             ViewModelProvider(this, ViewModelFactory(pref, this))[MainViewModel::class.java]
 
-        mainViewModel.getToken().observe(
-            this
-        ) { token: String ->
+        mainViewModel.userToken.observe(this)
+        { token: String ->
             if (token.isEmpty()) {
                 val i = Intent(this, LoginActivity::class.java)
                 startActivity(i)

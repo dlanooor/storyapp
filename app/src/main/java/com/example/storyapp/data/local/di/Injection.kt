@@ -1,7 +1,7 @@
 package com.example.storyapp.data.local.di
 
 import android.content.Context
-import com.example.storyapp.data.local.data.StoryRepository
+import com.example.storyapp.data.local.story.StoryRepository
 import com.example.storyapp.data.local.database.StoryDatabase
 import com.example.storyapp.data.remote.api.ApiConfig
 

@@ -183,7 +183,7 @@ class AddStoryActivity : AppCompatActivity() {
                 requestImageFile
             )
 
-            addStoryViewModel.getToken().observe(
+            addStoryViewModel.userToken.observe(
                 this
             ) { token: String ->
                 val service = ApiConfig.getApiService()

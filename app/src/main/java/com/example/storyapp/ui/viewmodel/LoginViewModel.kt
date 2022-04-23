@@ -13,5 +13,4 @@ class LoginViewModel(private val pref: UserSession) : ViewModel() {
             pref.saveToken(token)
         }
     }
-
 }

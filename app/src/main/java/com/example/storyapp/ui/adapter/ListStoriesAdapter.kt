@@ -57,7 +57,7 @@ class ListStoriesAdapter : PagingDataAdapter<ListStoryItem, ListStoriesAdapter.L
 
     companion object {
         const val STORIES = "stories"
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListStoryItem>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListStoryItem>() {
             override fun areItemsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem): Boolean {
                 return oldItem == newItem
             }

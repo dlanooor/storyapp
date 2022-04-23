@@ -5,8 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.example.storyapp.data.local.UserSession
 
-class AddStoryViewModel(private val pref: UserSession) : ViewModel() {
-    fun getToken(): LiveData<String> {
-        return pref.getToken().asLiveData()
-    }
+class AddStoryViewModel(pref: UserSession) : ViewModel() {
+    var userToken : LiveData<String> = pref.getToken().asLiveData()
 }

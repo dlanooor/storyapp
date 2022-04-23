@@ -1,4 +1,4 @@
-package com.example.storyapp.data.local.data
+package com.example.storyapp.data.local.story
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
