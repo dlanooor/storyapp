@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import com.example.storyapp.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -31,15 +30,15 @@ class AddStoryViewModelTest {
         val expectedToken = MutableLiveData<String>()
         Mockito.`when`(addStoryViewModel.userToken).thenReturn(expectedToken)
         val actualToken = addStoryViewModel.userToken
-        Assert.assertNotNull(actualToken)
-        Assert.assertEquals(expectedToken, actualToken)
+        assertNotNull(actualToken)
+        assertEquals(expectedToken, actualToken)
     }
 
     @Test
     fun `when Get Token Is Null`() = mainCoroutineRules.runBlockingTest {
         val expectedToken = MutableLiveData<String>()
         val actualToken = null
-        Assert.assertNull(actualToken)
-        Assert.assertNotEquals(expectedToken, actualToken)
+        assertNull(actualToken)
+        assertNotEquals(expectedToken, actualToken)
     }
 }

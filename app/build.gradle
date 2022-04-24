@@ -9,6 +9,10 @@ plugins {
 android {
     compileSdk 31
 
+    testOptions {
+        animationsDisabled = true
+    }
+
     defaultConfig {
         applicationId "com.example.storyapp"
         minSdk 21
@@ -17,6 +21,11 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    
+    sourceSets {
+        androidTest.java.srcDirs += "src/sharedTest/java"
+        test.java.srcDirs += "src/sharedTest/java"
     }
 
     buildTypes {
@@ -38,6 +47,12 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
         freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
+    }
+
+    packagingOptions {
+        resources {
+            excludes += ['META-INF/AL2.0', 'META-INF/LGPL2.1']
+        }
     }
 
     buildFeatures {
@@ -90,4 +105,17 @@ dependencies {
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2" //main coroutine rule
     testImplementation 'org.mockito:mockito-core:3.12.4'
     testImplementation 'org.mockito:mockito-inline:3.12.4'
+
+    //special instrumentation testing
+    androidTestImplementation "androidx.arch.core:core-testing:2.1.0" // InstantTaskExecutorRule
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2" //TestCoroutineDispatcher
+
+    //TestCoroutineDispatcher
+    debugImplementation "androidx.fragment:fragment-testing:1.4.1" //launchFragmentInContainer
+
+    //mock web server
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:4.9.3"
+    androidTestImplementation "com.squareup.okhttp3:okhttp-tls:4.9.3"
+    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.2' //RecyclerViewActions
+    implementation 'androidx.test.espresso:espresso-idling-resource:3.4.0'
 }

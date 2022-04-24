@@ -6,8 +6,6 @@ import androidx.paging.AsyncPagingDataDiffer
 import androidx.paging.PagingData
 import com.example.storyapp.DataDummy
 import com.example.storyapp.MainCoroutineRule
-import com.example.storyapp.data.local.database.StoryDao
-import com.example.storyapp.data.remote.api.ApiService
 import com.example.storyapp.data.remote.pojo.ListStoryItem
 import com.example.storyapp.getOrAwaitValue
 import com.example.storyapp.ui.adapter.ListStoriesAdapter

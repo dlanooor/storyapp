@@ -2,7 +2,6 @@ package com.example.storyapp.ui.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import androidx.paging.PagingData
 import com.example.storyapp.DataDummy
 import com.example.storyapp.MainCoroutineRule
 import com.example.storyapp.data.remote.pojo.ListStoryItem
@@ -10,7 +9,6 @@ import com.example.storyapp.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
-import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

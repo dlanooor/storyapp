@@ -14,7 +14,6 @@ import com.example.storyapp.ui.activity.DetailActivity
 import androidx.core.util.Pair
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import com.example.storyapp.databinding.ItemRowStoriesBinding
 
 class ListStoriesAdapter : PagingDataAdapter<ListStoryItem, ListStoriesAdapter.ListViewHolder>(

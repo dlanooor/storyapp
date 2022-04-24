@@ -4,7 +4,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.storyapp.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -30,7 +29,7 @@ class LoginViewModelTest {
         val expectedToken = "token"
         Mockito.`when`(loginViewModel.saveToken("token")).thenReturn(expectedToken)
         val actualToken = loginViewModel.saveToken("token")
-        Assert.assertNotNull(actualToken)
-        Assert.assertEquals(expectedToken, actualToken)
+        assertNotNull(actualToken)
+        assertEquals(expectedToken, actualToken)
     }
 }
