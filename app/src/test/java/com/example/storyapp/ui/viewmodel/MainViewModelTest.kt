@@ -8,7 +8,6 @@ import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import androidx.recyclerview.widget.ListUpdateCallback
-import androidx.test.filters.MediumTest
 import com.example.storyapp.DataDummy
 import com.example.storyapp.MainCoroutineRule
 import com.example.storyapp.data.remote.pojo.ListStoryItem
@@ -38,7 +37,6 @@ class MainViewModelTest {
     private lateinit var mainViewModel: MainViewModel
 
     @Test
-    @MediumTest
     fun `when Get Story Should Not Null`() = mainCoroutineRules.runBlockingTest {
         val dummyStory = DataDummy.generateDummyStoryEntity()
         val data = PagedTestDataSources.snapshot(dummyStory)

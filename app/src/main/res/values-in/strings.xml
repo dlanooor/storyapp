@@ -30,4 +30,8 @@
     <string name="logo">logo</string>
     <string name="image">gambar</string>
     <string name="switch_camera">tukar kamera</string>
+    <string name="google_map">GoogleMap</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="normal_type">Tipe Normal</string>
+    <string name="retry">Coba Lagi</string>
 </resources>

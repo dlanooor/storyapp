@@ -19,4 +19,5 @@ object DataDummy {
         }
         return storyList
     }
+
 }
