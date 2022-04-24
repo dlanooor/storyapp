@@ -2,7 +2,11 @@ package com.example.storyapp.ui.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.PagingData
+import com.example.storyapp.DataDummy
 import com.example.storyapp.MainCoroutineRule
+import com.example.storyapp.data.remote.pojo.ListStoryItem
+import com.example.storyapp.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
@@ -41,5 +45,19 @@ class MapsViewModelTest {
         val actualToken = null
         Assert.assertNull(actualToken)
         Assert.assertNotEquals(expectedToken, actualToken)
+    }
+
+    @Test
+    fun `when Get Location Should Not Null`() = mainCoroutineRules.runBlockingTest {
+        val dummyStory = DataDummy.generateDummyStoryEntity()
+        val story = MutableLiveData<List<ListStoryItem>>()
+        story.value = dummyStory
+        val token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLTRxdEJ0bDhXbFB4cnhnZDQiLCJpYXQiOjE2NDk3NTc5MjB9.pxZ4r33VUSpojfNL7KmsI3dqK2qk6Co1bxbkKmZj_To"
+        mapsViewModel.getLocation(token)
+        Mockito.`when`(mapsViewModel.listStory).thenReturn(story)
+        val actualStory = mapsViewModel.listStory.getOrAwaitValue()
+        Assert.assertNotNull(actualStory)
+        Assert.assertEquals(dummyStory.size, actualStory.size)
+        Assert.assertEquals(dummyStory, actualStory)
     }
 }

@@ -12,10 +12,11 @@ class MainViewModel(private val pref: UserSession, private val storyRepository: 
 
     var userToken : LiveData<String> = pref.getToken().asLiveData()
 
-    fun saveToken(token: String) {
+    fun saveToken(token: String): String {
         viewModelScope.launch {
             pref.saveToken(token)
         }
+        return token
     }
 
     fun getStories(token: String): LiveData<PagingData<ListStoryItem>> = storyRepository.getStory(token).cachedIn(viewModelScope)

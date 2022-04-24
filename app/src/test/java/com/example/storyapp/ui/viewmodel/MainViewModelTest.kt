@@ -3,12 +3,12 @@ package com.example.storyapp.ui.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.paging.AsyncPagingDataDiffer
 import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import androidx.recyclerview.widget.ListUpdateCallback
+import androidx.test.filters.MediumTest
 import com.example.storyapp.DataDummy
 import com.example.storyapp.MainCoroutineRule
 import com.example.storyapp.data.remote.pojo.ListStoryItem
@@ -38,6 +38,7 @@ class MainViewModelTest {
     private lateinit var mainViewModel: MainViewModel
 
     @Test
+    @MediumTest
     fun `when Get Story Should Not Null`() = mainCoroutineRules.runBlockingTest {
         val dummyStory = DataDummy.generateDummyStoryEntity()
         val data = PagedTestDataSources.snapshot(dummyStory)
@@ -86,11 +87,13 @@ class MainViewModelTest {
         Assert.assertNotEquals(expectedToken, actualToken)
     }
 
-    // save token still need fixes
     @Test
-    fun `when Save Token Is Sucess`() = mainCoroutineRules.runBlockingTest {
+    fun `when Save Token Is Success and Not Null`() = mainCoroutineRules.runBlockingTest {
         val expectedToken = "token"
-        mainViewModel.saveToken("token")
+        `when`(mainViewModel.saveToken("token")).thenReturn(expectedToken)
+        val actualToken = mainViewModel.saveToken("token")
+        Assert.assertNotNull(actualToken)
+        Assert.assertEquals(expectedToken, actualToken)
     }
 }
 
