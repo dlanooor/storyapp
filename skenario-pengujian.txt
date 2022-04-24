@@ -20,20 +20,20 @@ II.) GetLocation
 
 2.) AddStoryViewModelTest
 I.) GetToken
-I.I.) Ketika berhasil mengambil Token (Get Token)
-- Memastikan data tidak null
-- Memastikan tipe data yang dikembalikan sesuai
+	I.I.) Ketika berhasil mengambil Token (Get Token)
+	- Memastikan data tidak null
+	- Memastikan tipe data yang dikembalikan sesuai
 
-I.II.) Ketika gagal mengambil Token (Get Token)
-- Memastikan data null
-- Memastikan tipe data yang dikembalikan tidak sesuai
+	I.II.) Ketika gagal mengambil Token (Get Token)
+	- Memastikan data null
+	- Memastikan tipe data yang dikembalikan tidak sesuai
 
 3.) LoginViewModelTest
 I.) SaveToken
-I.I.) Ketika menyimpan Token (Save Token)
-- Memastikan token tersimpan
-- Memastikan token yang sudah tersimpan tidak null
-- Memastikan nilai token yang tersimpan sama dengan nilai input
+	I.I.) Ketika menyimpan Token (Save Token)
+	- Memastikan token tersimpan
+	- Memastikan token yang sudah tersimpan tidak null
+	- Memastikan nilai token yang tersimpan sama dengan nilai input
 
 4.) MainViewModelTest
 I.) GetToken
