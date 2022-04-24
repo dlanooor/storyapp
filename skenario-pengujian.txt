@@ -1,0 +1,74 @@
+*) androidTest
+1.) MainActivityTest (Integration Test)
+a.) Ketika berhasil menampilkan listStory di Main Activity
+- RecyclerView tampil
+- Data yang ditampilkan sesuai
+
+*.) test
+1.) StoryRepositoryTest
+I.) GetStory
+	I.I.) Ketika berhasil memuat data Story
+	- Memastikan data tidak null
+	- Memastikan jumlah data sesuai dengan yang diharapkan
+	- Memastikan tiap tipe data sesuai dengan yang diharapkan
+
+II.) GetLocation
+	II.I.) Ketika berhasil memuat data Story dengan Location
+	- Memastikan data tidak null
+	- Memastikan jumlah data sesuai dengan yang diharapkan
+	- Memastikan tipe data sesuai dengan yang diharapkan
+
+2.) AddStoryViewModelTest
+I.) GetToken
+I.I.) Ketika berhasil mengambil Token (Get Token)
+- Memastikan data tidak null
+- Memastikan tipe data yang dikembalikan sesuai
+
+I.II.) Ketika gagal mengambil Token (Get Token)
+- Memastikan data null
+- Memastikan tipe data yang dikembalikan tidak sesuai
+
+3.) LoginViewModelTest
+I.) SaveToken
+I.I.) Ketika menyimpan Token (Save Token)
+- Memastikan token tersimpan
+- Memastikan token yang sudah tersimpan tidak null
+- Memastikan nilai token yang tersimpan sama dengan nilai input
+
+4.) MainViewModelTest
+I.) GetToken
+	I.I.) Ketika berhasil mengambil Token (Get Token)
+	- Memastikan data tidak null
+	- Memastikan tipe data yang dikembalikan sesuai
+
+	I.II.) Ketika gagal mengambil Token (Get Token)
+	- Memastikan data null
+	- Memastikan tipe data yang dikembalikan tidak sesuai
+
+II.) SaveToken
+	II.I.) Ketika menyimpan Token (Save Token)
+	- Memastikan token tersimpan
+	- Memastikan token yang sudah tersimpan tidak null
+	- Memastikan nilai token yang tersimpan sama dengan nilai input
+
+III.) GetStory
+	III.I.) Ketika berhasil memuat data Story
+	- Memastikan data tidak null
+	- Memastikan jumlah data sesuai dengan yang diharapkan
+	- Memastikan tiap tipe data sesuai dengan yang diharapkan
+
+5.) MapsViewModelTest
+I.) GetToken
+	I.I.) Ketika berhasil mengambil Token (Get Token)
+	- Memastikan data tidak null
+	- Memastikan tipe data yang dikembalikan sesuai
+
+	II.II.) Ketika gagal mengambil Token (Get Token)
+	- Memastikan data null
+	- Memastikan tipe data yang dikembalikan tidak sesuai
+
+II.) GetLocation
+	II.I.) Ketika berhasil memuat data Story dengan Location
+	- Memastikan data tidak null
+	- Memastikan jumlah data sesuai dengan yang diharapkan
+	- Memastikan tipe data sesuai dengan yang diharapkan
